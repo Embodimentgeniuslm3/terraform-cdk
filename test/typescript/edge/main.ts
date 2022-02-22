@@ -108,7 +108,7 @@ export class ReferenceStack extends TerraformStack {
 
     // passing an element of a list ref of a complex list type (no block) into a resource
     new edge.OptionalAttributeResource(this, "list_item_from_list_type_ref", {
-      str: Fn.lookup(Fn.element(list.computedListOfObject, 5), "str", ""),
+      str: list.computedListOfObject.get("5").str,
     });
   }
 }

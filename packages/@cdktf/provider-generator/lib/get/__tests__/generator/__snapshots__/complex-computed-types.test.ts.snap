@@ -61,15 +61,15 @@ export function acmCertificateDomainValidationOptionsToTerraform(struct?: AcmCer
   }
 }
 
-export class AcmCertificateDomainValidationOptionsOutputReference extends cdktf.ComplexListItem {
+export class AcmCertificateDomainValidationOptionsOutputReference extends cdktf.ComplexObject {
   private isEmptyObject = false;
 
   /**
   * @param terraformResource The parent resource
   * @param terraformAttribute The attribute on the parent resource this class is referencing
   */
-  public constructor(terraformResource: cdktf.IInterpolatingParent, terraformAttribute: string) {
-    super(terraformResource, terraformAttribute);
+  public constructor(terraformResource: cdktf.IInterpolatingParent, terraformAttribute: string, complexObjectIndex: string, complexObjectIsFromSet: boolean) {
+    super(terraformResource, terraformAttribute, complexObjectIndex, complexObjectIsFromSet);
   }
 
   public get internalValue(): AcmCertificateDomainValidationOptions | undefined {
@@ -107,6 +107,17 @@ export class AcmCertificateDomainValidationOptionsOutputReference extends cdktf.
     return this.getStringAttribute('resource_record_value');
   }
 }
+
+export class AcmCertificateDomainValidationOptionsList extends cdktf.ComplexList {
+
+  constructor(protected terraformResource: cdktf.IInterpolatingParent, protected terraformAttribute: string, protected wrapsSet: boolean) {
+    super(terraformResource, terraformAttribute, wrapsSet)
+  }
+
+  public get(index: string): AcmCertificateDomainValidationOptionsOutputReference {
+    return new AcmCertificateDomainValidationOptionsOutputReference(this.terraformResource, this.terraformAttribute, index, this.wrapsSet);
+  }
+}
 export interface AcmCertificateOptions {
   /**
   * Docs at Terraform Registry: {@link https://www.terraform.io/docs/providers/aws/r/acm_certificate#certificate_transparency_logging_preference AcmCertificate#certificate_transparency_logging_preference}
@@ -132,7 +143,7 @@ export class AcmCertificateOptionsOutputReference extends cdktf.ComplexObject {
   * @param terraformAttribute The attribute on the parent resource this class is referencing
   */
   public constructor(terraformResource: cdktf.IInterpolatingParent, terraformAttribute: string) {
-    super(terraformResource, terraformAttribute);
+    super(terraformResource, terraformAttribute, '0', false);
   }
 
   public get internalValue(): AcmCertificateOptions | undefined {
@@ -290,7 +301,7 @@ export class AcmCertificate extends cdktf.TerraformResource {
   }
 
   // domain_validation_options - computed: true, optional: false, required: false
-  private _domainValidationOptions = [new AcmCertificateDomainValidationOptionsOutputReference(this, \\"domain_validation_options\\")];
+  private _domainValidationOptions = new AcmCertificateDomainValidationOptionsList(this, \\"domain_validation_options\\", false);
   public get domainValidationOptions() {
     return this._domainValidationOptions;
   }

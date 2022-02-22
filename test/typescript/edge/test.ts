@@ -106,23 +106,17 @@ describe("edge provider test", () => {
       const item = stack.byId("from_list");
 
       // Direct access is not supported, we have to go through terraform functions
-      expect(item.bool).toEqual(
-        '${lookup(element(list_block_resource.list.req, 0), "reqbool", false)}'
-      );
-      expect(item.str).toEqual(
-        '${lookup(element(list_block_resource.list.req, 0), "reqstr", "fallback")}'
-      );
-      expect(item.num).toEqual(
-        '${lookup(element(list_block_resource.list.req, 0), "reqnum", 0)}'
-      );
+      expect(item.bool).toEqual("${list_block_resource.list.req[0].reqbool}");
+      expect(item.str).toEqual("${list_block_resource.list.req[0].reqstr}");
+      expect(item.num).toEqual("${list_block_resource.list.req[0].reqnum");
       expect(item.boolList).toEqual([
-        '${lookup(element(list_block_resource.list.req, 0), "reqbool", false)}',
+        "${list_block_resource.list.req[0].reqbool",
       ]);
       expect(item.strList).toEqual([
-        '${lookup(element(list_block_resource.list.req, 0), "reqstr", "fallback")}',
+        "${list_block_resource.list.req[0].reqstr}",
       ]);
       expect(item.numList).toEqual([
-        '${lookup(element(list_block_resource.list.req, 0), "reqnum", 0)}',
+        "${list_block_resource.list.req[0].reqnum",
       ]);
     });
 
@@ -227,7 +221,7 @@ describe("edge provider test", () => {
       const item = stack.byId("list_item_from_list_type_ref");
 
       expect(item.str).toEqual(
-        '${lookup(element(list_block_resource.list.computedListOfObject, 5), "str", "")}'
+        "${list_block_resource.list.computedListOfObject[5].str}"
       );
     });
   });

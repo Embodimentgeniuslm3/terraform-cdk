@@ -216,17 +216,21 @@ export class DefaultTokenResolver implements ITokenResolver {
     return context.resolve(token);
   }
 
-  public resolveComplexList(xs: ComplexListItem[], context: IResolveContext) {
+  public resolveComplexList(
+    xs: ComplexListItem[],
+    context: IResolveContext
+  ): any {
+    context;
     // Must be a singleton list token, because concatenation is not allowed.
     if (xs.length !== 1) {
       throw new Error(`Cannot add elements to list token, got: ${xs}`);
     }
 
-    const token = xs[0].interpolationAsList();
-    if (token === undefined) {
-      return xs;
-    }
-    return context.resolve(token);
+    // const token = xs[0].interpolationAsList(); FIXME: remove this?
+    // if (token === undefined) {
+    return xs;
+    // }
+    // return context.resolve(token);
   }
 
   public resolveMap(xs: { [key: string]: any }, context: IResolveContext) {

@@ -74,13 +74,12 @@ export class TestOutputReference extends ComplexObject {
   /**
    * @param terraformResource The parent resource
    * @param terraformAttribute The attribute on the parent resource this class is referencing
-   * @param isSingleItem True if this is a block, false if it's a list
    */
   public constructor(
     terraformResource: ITerraformResource,
     terraformAttribute: string
   ) {
-    super(terraformResource, terraformAttribute);
+    super(terraformResource, terraformAttribute, "0", false); // FIXME: add test case which needs these to be set differently
   }
 
   public get value() {
@@ -109,7 +108,7 @@ export class OtherTestResource extends TerraformResource {
   }
 
   public get complexComputedList() {
-    return [new TestComplexListItem(this, "complex_computed_list")];
+    return [new TestComplexListItem(this, "complex_computed_list", "0", false)];
   }
 
   public get outputRef() {

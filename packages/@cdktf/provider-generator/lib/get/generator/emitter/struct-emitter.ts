@@ -63,7 +63,7 @@ export class StructEmitter {
         this.emitInterface(resource, struct);
         // And we use the class for the attributes / outputs of a resource / nested block
         if (!struct.isProvider) {
-          this.emitClass(struct, struct.outputReferenceName);
+          this.emitClass(struct);
         }
       } else {
         this.emitInterface(resource, struct);
@@ -109,7 +109,7 @@ export class StructEmitter {
               ...[structTypeName, attTypeStruct.mapperName]
             );
 
-            // OutputReferences are only used in the current file
+            // OutputReferences are only used in the current file FIXME: this probably needs to be adjusted
             // if both the imported type and the referencing type
             // within this file are class based accessors (complex objects)
             if (att.type.struct?.isClass && struct.isClass) {
@@ -143,15 +143,13 @@ export class StructEmitter {
       });
 
       structs.forEach((struct) => {
-        if (struct.isSingleItem) {
+        if (struct.isSingleItem || struct.isClass) {
           // We use the interface here for the configuration / inputs of a resource / nested block
           this.emitInterface(resource, struct);
           // And we use the class for the attributes / outputs of a resource / nested block
           if (!struct.isProvider) {
-            this.emitClass(struct, struct.outputReferenceName);
+            this.emitClass(struct);
           }
-        } else if (struct.isClass) {
-          this.emitClass(struct);
         } else {
           this.emitInterface(resource, struct);
         }
@@ -169,11 +167,9 @@ export class StructEmitter {
     this.code.closeFile(indexFilePath);
   }
 
-  private emitClass(struct: Struct, name = struct.name) {
+  private emitClass(struct: Struct) {
     this.code.openBlock(
-      `export class ${name} extends ${
-        struct.isSingleItem ? "cdktf.ComplexObject" : "cdktf.ComplexListItem"
-      }`
+      `export class ${struct.outputReferenceName} extends cdktf.ComplexObject`
     );
 
     this.code.line("private isEmptyObject = false;");
@@ -184,12 +180,24 @@ export class StructEmitter {
     this.code.line(
       `* @param terraformAttribute The attribute on the parent resource this class is referencing`
     );
-    this.code.line(`*/`);
-    this.code.openBlock(
-      `public constructor(terraformResource: cdktf.IInterpolatingParent, terraformAttribute: string)`
-    );
-    this.code.line(`super(terraformResource, terraformAttribute);`);
-    this.code.closeBlock();
+    this.code.line(`*/`); // FIXME: adjust constructor based on single vs multi item
+    if (struct.isSingleItem) {
+      this.code.openBlock(
+        `public constructor(terraformResource: cdktf.IInterpolatingParent, terraformAttribute: string)`
+      );
+      this.code.line(
+        `super(terraformResource, terraformAttribute, '0', false);`
+      );
+      this.code.closeBlock();
+    } else {
+      this.code.openBlock(
+        `public constructor(terraformResource: cdktf.IInterpolatingParent, terraformAttribute: string, complexObjectIndex: string, complexObjectIsFromSet: boolean)`
+      );
+      this.code.line(
+        `super(terraformResource, terraformAttribute, complexObjectIndex, complexObjectIsFromSet);`
+      );
+      this.code.closeBlock();
+    }
 
     this.code.line();
     if (struct.attributeType !== "stored_class" || struct.isSingleItem) {
@@ -208,6 +216,32 @@ export class StructEmitter {
     }
 
     this.code.closeBlock();
+
+    // FIXME: emit list class if multiitem
+    if (!struct.isSingleItem) {
+      this.code.line();
+      this.code.openBlock(
+        `export class ${struct.listName} extends cdktf.ComplexList`
+      );
+
+      this.code.line(); // TODO: add docstrings
+      this.code.openBlock(
+        `constructor(protected terraformResource: cdktf.IInterpolatingParent, protected terraformAttribute: string, protected wrapsSet: boolean)`
+      );
+      this.code.line(`super(terraformResource, terraformAttribute, wrapsSet)`);
+      this.code.closeBlock();
+
+      this.code.line();
+      this.code.openBlock(
+        `public get(index: string): ${struct.outputReferenceName}`
+      );
+      this.code.line(
+        `return new ${struct.outputReferenceName}(this.terraformResource, this.terraformAttribute, index, this.wrapsSet);`
+      );
+      this.code.closeBlock();
+
+      this.code.closeBlock();
+    }
   }
 
   private emitInternalValueGetter(struct: Struct) {

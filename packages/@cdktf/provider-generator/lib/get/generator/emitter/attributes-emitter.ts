@@ -131,7 +131,7 @@ export class AttributesEmitter {
       return `new ${att.type.name}OutputReference(this, "${att.terraformName}")`;
     } else {
       // list
-      return `[new ${att.type.name}OutputReference(this, "${att.terraformName}")]`;
+      return `new ${att.type.name}List(this, "${att.terraformName}", ${att.type.isSet})`;
     }
   }
 

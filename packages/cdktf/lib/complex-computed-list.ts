@@ -143,7 +143,7 @@ export class ComplexComputedList extends ComplexComputedAttribute {
     }
 
     return this.terraformResource.interpolationForAttribute(
-      `${this.terraformAttribute}.${this.complexComputedListIndex}.${property}`
+      `${this.terraformAttribute}[${this.complexComputedListIndex}].${property}`
     );
   }
 }
@@ -156,31 +156,24 @@ export abstract class ComplexList implements ITerraformAddressable {
     protected wrapsSet: boolean
   ) {}
 
-  public abstract get(index: string): ComplexListItem;
+  // public abstract get(index: string): ComplexListItem; // TODO: does jsii like this?
 
   /**
    * to be used by concrete classes extending ComplexList to implement the abstract method `get`
    */
-  protected instantiateItemForIndex(
-    index: string,
-    Constructor: new (
-      ...args: ConstructorParameters<typeof ComplexListItem>
-    ) => ComplexListItem
-  ): ComplexListItem {
-    return new Constructor(
-      this.terraformResource,
-      this.terraformAttribute,
-      index,
-      this.wrapsSet
-    );
-
-    /*
-    protected terraformResource: IInterpolatingParent,
-    protected terraformAttribute: string,
-    protected complexListItemIndex: string,
-    protected wrapsSet?: boolean
-    */
-  }
+  // protected instantiateItemForIndex( // FIXME: does not work with JSII – cannot pass constructor
+  //   index: string,
+  //   Constructor: new (
+  //     ...args: any[] // ConstructorParameters<typeof ComplexListItem> (does not work with JSII)
+  //   ) => ComplexListItem
+  // ): ComplexListItem {
+  //   return new Constructor(
+  //     this.terraformResource,
+  //     this.terraformAttribute,
+  //     index,
+  //     this.wrapsSet
+  //   );
+  // }
 
   get fqn(): string {
     return Token.asString(
@@ -190,19 +183,46 @@ export abstract class ComplexList implements ITerraformAddressable {
 }
 
 export class ComplexObject extends ComplexComputedAttribute {
+  /**
+   * @param terraformResource
+   * @param terraformAttribute
+   * @param complexObjectIndex the index of the complex object in a list
+   * @param complexObjectIsFromSet set to true if this item is from inside a set and needs tolist() for accessing it
+   *                               set to "0" for single list items
+   */
   constructor(
     protected terraformResource: IInterpolatingParent,
-    protected terraformAttribute: string
+    protected terraformAttribute: string,
+    protected complexObjectIndex: string, // FIXME: make number!? Why was this a string previously in "getter" methods?
+    protected complexObjectIsFromSet: boolean
   ) {
     super(terraformResource, terraformAttribute);
   }
 
   public interpolationForAttribute(property: string) {
+    // if (typeof this.complexListItemIndex !== "string") { FIXME: throw in list.get(index) function
+    //   throw new Error(`Cannot directly access property ${property} in list which is only known at runtime.
+    //   Use Fn.lookup(Fn.element(yourList, yourIndex), "${property}", defaultValue) instead`);
+    // }
+
+    if (this.complexObjectIsFromSet) {
+      return propertyAccess(
+        Fn.tolist(
+          this.terraformResource.interpolationForAttribute(
+            this.terraformAttribute
+          )
+        ),
+        [this.complexObjectIndex, property]
+      );
+    }
+
     return this.terraformResource.interpolationForAttribute(
-      `${this.terraformAttribute}[0].${property}`
+      `${this.terraformAttribute}[${this.complexObjectIndex}].${property}`
     );
   }
 
+  // FIXME: should we remove this? is this needed? Remove? Technically else there would be no way to access the list interpolation for single list items directly wrapped in this
+  // Apparently it is used in the "isComplexElement" check to detect this here
   protected interpolationAsList() {
     return this.terraformResource.interpolationForAttribute(
       `${this.terraformAttribute}`
@@ -226,6 +246,7 @@ export class ComplexListItem
   }
 
   public static isComplexListItem(x: any): x is ComplexListItem {
+    x;
     // FIXME: adjust parts where this is used, disables them by returning false for now.
     return false;
     // return x !== null && typeof x === "object" && COMPLEX_LIST_ITEM_SYMBOL in x;
@@ -250,7 +271,7 @@ export class ComplexListItem
     }
 
     return this.terraformResource.interpolationForAttribute(
-      `${this.terraformAttribute}.${this.complexListItemIndex}.${property}`
+      `${this.terraformAttribute}[${this.complexListItemIndex}].${property}`
     );
   }
 

@@ -6,6 +6,6 @@ Resources
  ✔ NULL_RESOURCE       test                null_resource.test
 
 
-Summary: 1 created, 0 updated, 0 destroyed.
+[1mSummary: [22m1 created, 0 updated, 0 destroyed.
 "
 `;

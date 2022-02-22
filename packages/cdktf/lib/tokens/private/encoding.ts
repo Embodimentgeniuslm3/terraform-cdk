@@ -149,6 +149,7 @@ export function containsNumberListTokenElement(xs: any[]) {
   );
 }
 
+// FIXME: this probably needs to be updated somehow, or where it is used
 export function containsComplexListItemElement(
   xs: any[]
 ): xs is ComplexListItem[] {
