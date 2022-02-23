@@ -6,7 +6,6 @@ import { Expression } from ".";
 import { isArray } from "util";
 import { ITerraformAddressable } from "./terraform-addressable";
 import { Token } from "./tokens";
-import { containsComplexListItemElement } from "./tokens/private/encoding";
 
 const TERRAFORM_OUTPUT_SYMBOL = Symbol.for("cdktf/TerraformOutput");
 
@@ -75,9 +74,9 @@ export class TerraformOutput extends TerraformElement {
     }
 
     if (Array.isArray(arg)) {
-      if (containsComplexListItemElement(arg)) {
-        return arg[0].fqn;
-      }
+      // if (containsComplexListItemElement(arg)) {
+      //   return arg[0].fqn;
+      // }
 
       return arg.map((innerArg) => this.synthesizeValue(innerArg));
     }

@@ -193,7 +193,7 @@ export class ComplexObject extends ComplexComputedAttribute {
   constructor(
     protected terraformResource: IInterpolatingParent,
     protected terraformAttribute: string,
-    protected complexObjectIndex: string, // FIXME: make number!? Why was this a string previously in "getter" methods?
+    protected complexObjectIndex: number, // FIXME: make number!? Why was this a string previously in "getter" methods?
     protected complexObjectIsFromSet: boolean
   ) {
     super(terraformResource, terraformAttribute);
@@ -230,69 +230,72 @@ export class ComplexObject extends ComplexComputedAttribute {
   }
 }
 
-const COMPLEX_LIST_ITEM_SYMBOL = Symbol.for("cdktf/ComplexListItem");
-export class ComplexListItem
-  extends ComplexComputedAttribute
-  implements ITerraformAddressable
-{
-  constructor(
-    protected terraformResource: IInterpolatingParent,
-    protected terraformAttribute: string,
-    protected complexListItemIndex: string,
-    protected wrapsSet: boolean
-  ) {
-    super(terraformResource, terraformAttribute);
-    Object.defineProperty(this, COMPLEX_LIST_ITEM_SYMBOL, { value: true });
-  }
+// const COMPLEX_LIST_ITEM_SYMBOL = Symbol.for("cdktf/ComplexListItem");
+/**
+ * @deprecated
+ */
+// export class ComplexListItem // FIXME: remove this whole class?
+//   extends ComplexComputedAttribute
+//   implements ITerraformAddressable
+// {
+//   constructor(
+//     protected terraformResource: IInterpolatingParent,
+//     protected terraformAttribute: string,
+//     protected complexListItemIndex: string,
+//     protected wrapsSet: boolean
+//   ) {
+//     super(terraformResource, terraformAttribute);
+//     Object.defineProperty(this, COMPLEX_LIST_ITEM_SYMBOL, { value: true });
+//   }
 
-  public static isComplexListItem(x: any): x is ComplexListItem {
-    x;
-    // FIXME: adjust parts where this is used, disables them by returning false for now.
-    return false;
-    // return x !== null && typeof x === "object" && COMPLEX_LIST_ITEM_SYMBOL in x;
-    // FIXME: what do we need to do to properly resolve whenever a complex list item is passed somewhere?
-  }
+//   public static isComplexListItem(x: any): x is ComplexListItem {
+//     x;
+//     // FIXME: adjust parts where this is used, disables them by returning false for now.
+//     return false;
+//     // return x !== null && typeof x === "object" && COMPLEX_LIST_ITEM_SYMBOL in x;
+//     // FIXME: what do we need to do to properly resolve whenever a complex list item is passed somewhere?
+//   }
 
-  public interpolationForAttribute(property: string) {
-    // if (typeof this.complexListItemIndex !== "string") {
-    //   throw new Error(`Cannot directly access property ${property} in list which is only known at runtime.
-    //   Use Fn.lookup(Fn.element(yourList, yourIndex), "${property}", defaultValue) instead`);
-    // }
+//   public interpolationForAttribute(property: string) {
+//     // if (typeof this.complexListItemIndex !== "string") {
+//     //   throw new Error(`Cannot directly access property ${property} in list which is only known at runtime.
+//     //   Use Fn.lookup(Fn.element(yourList, yourIndex), "${property}", defaultValue) instead`);
+//     // }
 
-    if (this.wrapsSet) {
-      return propertyAccess(
-        Fn.tolist(
-          this.terraformResource.interpolationForAttribute(
-            this.terraformAttribute
-          )
-        ),
-        [this.complexListItemIndex, property]
-      );
-    }
+//     if (this.wrapsSet) {
+//       return propertyAccess(
+//         Fn.tolist(
+//           this.terraformResource.interpolationForAttribute(
+//             this.terraformAttribute
+//           )
+//         ),
+//         [this.complexListItemIndex, property]
+//       );
+//     }
 
-    return this.terraformResource.interpolationForAttribute(
-      `${this.terraformAttribute}[${this.complexListItemIndex}].${property}`
-    );
-  }
+//     return this.terraformResource.interpolationForAttribute(
+//       `${this.terraformAttribute}[${this.complexListItemIndex}].${property}`
+//     );
+//   }
 
-  public get fqn() {
-    if (this.wrapsSet) {
-      return Token.asString(
-        propertyAccess(
-          Fn.tolist(
-            this.terraformResource.interpolationForAttribute(
-              this.terraformAttribute
-            )
-          ),
-          [this.complexListItemIndex]
-        )
-      );
-    }
+//   public get fqn() {
+//     if (this.wrapsSet) {
+//       return Token.asString(
+//         propertyAccess(
+//           Fn.tolist(
+//             this.terraformResource.interpolationForAttribute(
+//               this.terraformAttribute
+//             )
+//           ),
+//           [this.complexListItemIndex]
+//         )
+//       );
+//     }
 
-    return Token.asString(
-      this.terraformResource.interpolationForAttribute(
-        `${this.terraformAttribute}.${this.complexListItemIndex}`
-      )
-    );
-  }
-}
+//     return Token.asString(
+//       this.terraformResource.interpolationForAttribute(
+//         `${this.terraformAttribute}.${this.complexListItemIndex}`
+//       )
+//     );
+//   }
+// }

@@ -15,7 +15,6 @@ import {
   unresolved,
   containsNumberListTokenElement,
   containsMapToken,
-  containsComplexListItemElement,
 } from "./encoding";
 import { TokenMap } from "./token-map";
 import { Token } from "../token";
@@ -193,9 +192,9 @@ export function resolve(obj: any, options: IResolveOptions): any {
       return options.resolver.resolveNumberList(obj, makeContext()[0]);
     }
 
-    if (containsComplexListItemElement(obj)) {
-      return options.resolver.resolveComplexList(obj, makeContext()[0]);
-    }
+    // if (containsComplexListItemElement(obj)) {
+    //   return options.resolver.resolveComplexList(obj, makeContext()[0]);
+    // }
 
     const arr = obj
       .map((x, i) => makeContext(`${i}`)[0].resolve(x))

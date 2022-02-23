@@ -53,12 +53,12 @@ export class ReferenceStack extends TerraformStack {
 
     // required values FROM required multi item lists
     new edge.RequiredAttributeResource(this, "from_list", {
-      bool: Fn.lookup(Fn.element(list.req, 0), "reqbool", false),
-      str: Fn.lookup(Fn.element(list.req, 0), "reqstr", "fallback"),
-      num: Fn.lookup(Fn.element(list.req, 0), "reqnum", 0),
-      strList: [Fn.lookup(Fn.element(list.req, 0), "reqstr", "fallback")],
-      numList: [Fn.lookup(Fn.element(list.req, 0), "reqnum", 0)],
-      boolList: [Fn.lookup(Fn.element(list.req, 0), "reqbool", false)],
+      bool: list.req.get(0).reqbool,
+      str: list.req.get(0).reqstr,
+      num: list.req.get(0).reqnum,
+      strList: [list.req.get(0).reqstr],
+      numList: [list.req.get(0).reqnum],
+      boolList: [list.req.get(0).reqbool],
     });
 
     // passing a reference to a complete list

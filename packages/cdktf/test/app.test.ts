@@ -541,7 +541,7 @@ describe("Cross Stack references", () => {
   it("resolves complex computed list values with cross stack references", () => {
     const other = new OtherTestResource(originStack, "other", {});
     new TestResource(testStack, "Resource", {
-      name: Fn.lookup(Fn.element(other.complexComputedList, 42), "id", ""),
+      name: other.complexComputedList.get(42).id,
     });
 
     app.synth();
@@ -551,7 +551,7 @@ describe("Cross Stack references", () => {
     const originOutput = Object.values(
       JSON.parse(originStackSynth).output as { value: string }[]
     )[0].value;
-    expect(originOutput).toContain(".complex_computed_list");
+    expect(originOutput).toContain(".complex_computed_list"); // FIXME: update this
     expect(targetStackSynth).toHaveResourceWithProperties(TestResource, {
       name: expect.stringContaining("${lookup(element("),
     });
@@ -563,7 +563,7 @@ describe("Cross Stack references", () => {
   it("resolves complex computed lists as fqn with cross stack references", () => {
     const other = new OtherTestResource(originStack, "other", {});
     new TerraformOutput(testStack, "fqn", {
-      value: Fn.element(other.complexComputedList, 42),
+      value: other.complexComputedList.get(42),
     });
 
     app.synth();

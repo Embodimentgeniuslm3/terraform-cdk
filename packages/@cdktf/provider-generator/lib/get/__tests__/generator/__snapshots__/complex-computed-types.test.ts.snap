@@ -68,7 +68,7 @@ export class AcmCertificateDomainValidationOptionsOutputReference extends cdktf.
   * @param terraformResource The parent resource
   * @param terraformAttribute The attribute on the parent resource this class is referencing
   */
-  public constructor(terraformResource: cdktf.IInterpolatingParent, terraformAttribute: string, complexObjectIndex: string, complexObjectIsFromSet: boolean) {
+  public constructor(terraformResource: cdktf.IInterpolatingParent, terraformAttribute: string, complexObjectIndex: number, complexObjectIsFromSet: boolean) {
     super(terraformResource, terraformAttribute, complexObjectIndex, complexObjectIsFromSet);
   }
 
@@ -114,7 +114,7 @@ export class AcmCertificateDomainValidationOptionsList extends cdktf.ComplexList
     super(terraformResource, terraformAttribute, wrapsSet)
   }
 
-  public get(index: string): AcmCertificateDomainValidationOptionsOutputReference {
+  public get(index: number): AcmCertificateDomainValidationOptionsOutputReference {
     return new AcmCertificateDomainValidationOptionsOutputReference(this.terraformResource, this.terraformAttribute, index, this.wrapsSet);
   }
 }
@@ -143,7 +143,7 @@ export class AcmCertificateOptionsOutputReference extends cdktf.ComplexObject {
   * @param terraformAttribute The attribute on the parent resource this class is referencing
   */
   public constructor(terraformResource: cdktf.IInterpolatingParent, terraformAttribute: string) {
-    super(terraformResource, terraformAttribute, '0', false);
+    super(terraformResource, terraformAttribute, 0, false);
   }
 
   public get internalValue(): AcmCertificateOptions | undefined {

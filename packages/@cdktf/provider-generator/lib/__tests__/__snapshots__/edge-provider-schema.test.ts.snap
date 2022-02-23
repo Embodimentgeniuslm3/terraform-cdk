@@ -346,7 +346,7 @@ export class ListBlockResourceComputedListOfObjectOutputReference extends cdktf.
   * @param terraformResource The parent resource
   * @param terraformAttribute The attribute on the parent resource this class is referencing
   */
-  public constructor(terraformResource: cdktf.IInterpolatingParent, terraformAttribute: string, complexObjectIndex: string, complexObjectIsFromSet: boolean) {
+  public constructor(terraformResource: cdktf.IInterpolatingParent, terraformAttribute: string, complexObjectIndex: number, complexObjectIsFromSet: boolean) {
     super(terraformResource, terraformAttribute, complexObjectIndex, complexObjectIsFromSet);
   }
 
@@ -377,7 +377,7 @@ export class ListBlockResourceComputedListOfObjectList extends cdktf.ComplexList
     super(terraformResource, terraformAttribute, wrapsSet)
   }
 
-  public get(index: string): ListBlockResourceComputedListOfObjectOutputReference {
+  public get(index: number): ListBlockResourceComputedListOfObjectOutputReference {
     return new ListBlockResourceComputedListOfObjectOutputReference(this.terraformResource, this.terraformAttribute, index, this.wrapsSet);
   }
 }
@@ -560,7 +560,7 @@ export class ListBlockResourceSingleoptOutputReference extends cdktf.ComplexObje
   * @param terraformAttribute The attribute on the parent resource this class is referencing
   */
   public constructor(terraformResource: cdktf.IInterpolatingParent, terraformAttribute: string) {
-    super(terraformResource, terraformAttribute, '0', false);
+    super(terraformResource, terraformAttribute, 0, false);
   }
 
   public get internalValue(): ListBlockResourceSingleopt | undefined {
@@ -832,7 +832,7 @@ export class ListBlockResourceSinglereqOutputReference extends cdktf.ComplexObje
   * @param terraformAttribute The attribute on the parent resource this class is referencing
   */
   public constructor(terraformResource: cdktf.IInterpolatingParent, terraformAttribute: string) {
-    super(terraformResource, terraformAttribute, '0', false);
+    super(terraformResource, terraformAttribute, 0, false);
   }
 
   public get internalValue(): ListBlockResourceSinglereq | undefined {
@@ -1064,7 +1064,7 @@ export class ListBlockResourceSingleComputedBlockOutputReference extends cdktf.C
   * @param terraformAttribute The attribute on the parent resource this class is referencing
   */
   public constructor(terraformResource: cdktf.IInterpolatingParent, terraformAttribute: string) {
-    super(terraformResource, terraformAttribute, '0', false);
+    super(terraformResource, terraformAttribute, 0, false);
   }
 
   public get internalValue(): ListBlockResourceSingleComputedBlock | undefined {

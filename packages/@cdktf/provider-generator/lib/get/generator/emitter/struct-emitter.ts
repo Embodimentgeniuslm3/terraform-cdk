@@ -185,13 +185,11 @@ export class StructEmitter {
       this.code.openBlock(
         `public constructor(terraformResource: cdktf.IInterpolatingParent, terraformAttribute: string)`
       );
-      this.code.line(
-        `super(terraformResource, terraformAttribute, '0', false);`
-      );
+      this.code.line(`super(terraformResource, terraformAttribute, 0, false);`);
       this.code.closeBlock();
     } else {
       this.code.openBlock(
-        `public constructor(terraformResource: cdktf.IInterpolatingParent, terraformAttribute: string, complexObjectIndex: string, complexObjectIsFromSet: boolean)`
+        `public constructor(terraformResource: cdktf.IInterpolatingParent, terraformAttribute: string, complexObjectIndex: number, complexObjectIsFromSet: boolean)`
       );
       this.code.line(
         `super(terraformResource, terraformAttribute, complexObjectIndex, complexObjectIsFromSet);`
@@ -224,7 +222,7 @@ export class StructEmitter {
         `export class ${struct.listName} extends cdktf.ComplexList`
       );
 
-      this.code.line(); // TODO: add docstrings
+      this.code.line(); // TODO: add docstrings, or is this even necessary? FIXME: check if wrapsSet cannot be inlined. It probably should be
       this.code.openBlock(
         `constructor(protected terraformResource: cdktf.IInterpolatingParent, protected terraformAttribute: string, protected wrapsSet: boolean)`
       );
@@ -233,7 +231,7 @@ export class StructEmitter {
 
       this.code.line();
       this.code.openBlock(
-        `public get(index: string): ${struct.outputReferenceName}`
+        `public get(index: number): ${struct.outputReferenceName}`
       );
       this.code.line(
         `return new ${struct.outputReferenceName}(this.terraformResource, this.terraformAttribute, index, this.wrapsSet);`

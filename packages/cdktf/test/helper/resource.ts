@@ -1,12 +1,8 @@
-import {
-  TerraformResource,
-  TerraformMetaArguments,
-  ComplexListItem,
-} from "../../lib";
+import { TerraformResource, TerraformMetaArguments } from "../../lib";
 import { Construct } from "constructs";
 import { TestProviderMetadata } from "./provider";
 import { stringToTerraform } from "../../lib/runtime";
-import { ComplexObject } from "../../lib/complex-computed-list";
+import { ComplexList, ComplexObject } from "../../lib/complex-computed-list";
 import { ITerraformResource } from "../../lib/terraform-resource";
 
 export interface TestResourceConfig extends TerraformMetaArguments {
@@ -79,7 +75,7 @@ export class TestOutputReference extends ComplexObject {
     terraformResource: ITerraformResource,
     terraformAttribute: string
   ) {
-    super(terraformResource, terraformAttribute, "0", false); // FIXME: add test case which needs these to be set differently
+    super(terraformResource, terraformAttribute, 0, false); // FIXME: add test case which needs these to be set differently
   }
 
   public get value() {
@@ -108,7 +104,7 @@ export class OtherTestResource extends TerraformResource {
   }
 
   public get complexComputedList() {
-    return [new TestComplexListItem(this, "complex_computed_list", "0", false)];
+    return new TestComplexList(this, "complex_comupted_list", false);
   }
 
   public get outputRef() {
@@ -120,9 +116,20 @@ export class OtherTestResource extends TerraformResource {
   }
 }
 
-class TestComplexListItem extends ComplexListItem {
+class TestComplexObject extends ComplexObject {
   public get id() {
     return this.getStringAttribute("id");
+  }
+}
+
+class TestComplexList extends ComplexList {
+  public get(index: number): TestComplexObject {
+    return new TestComplexObject(
+      this.terraformResource,
+      this.terraformAttribute,
+      index,
+      this.wrapsSet
+    );
   }
 }
 

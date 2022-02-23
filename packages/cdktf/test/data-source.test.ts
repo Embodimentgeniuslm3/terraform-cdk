@@ -1,4 +1,4 @@
-import { Fn, Testing, Token } from "../lib";
+import { Testing, Token } from "../lib";
 import { TestResource } from "./helper";
 import { TestDataSource } from "./helper/data-source";
 import { TestProvider } from "./helper/provider";
@@ -23,11 +23,7 @@ test("with complex computed list", () => {
         name: "foo",
       });
       new TestResource(stack, "test-resource", {
-        name: Fn.lookup(
-          Fn.element(dataSource.complexComputedList, 0),
-          "id",
-          ""
-        ),
+        name: dataSource.complexComputedList.get(0).id,
       });
     })
   ).toMatchSnapshot();

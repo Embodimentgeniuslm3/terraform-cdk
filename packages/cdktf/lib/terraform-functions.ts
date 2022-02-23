@@ -2,11 +2,7 @@ import { Tokenization } from "./tokens/token";
 import { call } from "./tfExpression";
 import { IResolvable } from "./tokens/resolvable";
 import { TokenMap } from "./tokens/private/token-map";
-import {
-  TokenString,
-  extractTokenDouble,
-  containsComplexListItemElement,
-} from "./tokens/private/encoding";
+import { TokenString, extractTokenDouble } from "./tokens/private/encoding";
 import { rawString } from ".";
 
 // We use branding here to ensure we internally only handle validated values
@@ -61,9 +57,9 @@ function listOf(type: TFValueValidator): TFValueValidator {
       return value;
     }
 
-    if (containsComplexListItemElement(value)) {
-      return value[0].fqn;
-    }
+    // if (containsComplexListItemElement(value)) {
+    //   return value[0].fqn;
+    // }
 
     return value
       .filter((item) => item !== undefined && item !== null)
