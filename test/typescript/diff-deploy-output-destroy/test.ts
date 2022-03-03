@@ -12,12 +12,12 @@ describe("full integration test", () => {
 
   test("diff", () => {
     expect(driver.diff()).toMatchInlineSnapshot(`
-      "Stack: [1mhello-deploy[22m
-      [1mResources[22m
-       [32m+ [39mNULL_RESOURCE       test                [90mnull_resource.test[39m
+      "Stack: hello-deploy
+      Resources
+       + NULL_RESOURCE       test                null_resource.test
 
 
-      [1mDiff: [22m1 to create, 0 to update, 0 to delete.
+      Diff: 1 to create, 0 to update, 0 to delete.
       "
     `);
   });
@@ -29,9 +29,9 @@ describe("full integration test", () => {
        ✔ NULL_RESOURCE       test                null_resource.test
 
 
-      [1mSummary: [22m1 created, 0 updated, 0 destroyed.
+      Summary: 1 created, 0 updated, 0 destroyed.
 
-      [1mOutput: [22moutput = hello
+      Output: output = hello
               output2 = <sensitive>
       "
     `);
@@ -40,7 +40,7 @@ describe("full integration test", () => {
   test("output", () => {
     expect(driver.output()).toMatchInlineSnapshot(`
       "
-      [1mOutput: [22moutput = hello
+      Output: output = hello
               output2 = <sensitive>
       "
     `);
@@ -78,7 +78,7 @@ describe("full integration test", () => {
        ✔ NULL_RESOURCE       test                null_resource.test
 
 
-      [1mSummary: [22m1 destroyed.
+      Summary: 1 destroyed.
       "
     `);
   });
