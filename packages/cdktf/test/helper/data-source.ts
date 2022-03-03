@@ -36,7 +36,7 @@ export class TestDataSource extends TerraformDataSource {
   }
 
   public get complexComputedList() {
-    return new TestComplexList(this, "complex_comupted_list", false);
+    return new TestComplexList(this, "complex_computed_list", false);
   }
 
   public stringMap(key: string) {

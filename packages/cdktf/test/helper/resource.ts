@@ -104,7 +104,7 @@ export class OtherTestResource extends TerraformResource {
   }
 
   public get complexComputedList() {
-    return new TestComplexList(this, "complex_comupted_list", false);
+    return new TestComplexList(this, "complex_computed_list", false);
   }
 
   public get outputRef() {

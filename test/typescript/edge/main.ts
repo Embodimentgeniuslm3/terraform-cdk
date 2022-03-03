@@ -53,12 +53,12 @@ export class ReferenceStack extends TerraformStack {
 
     // required values FROM required multi item lists
     new edge.RequiredAttributeResource(this, "from_list", {
-      bool: list.req.get(0).reqbool,
-      str: list.req.get(0).reqstr,
-      num: list.req.get(0).reqnum,
-      strList: [list.req.get(0).reqstr],
-      numList: [list.req.get(0).reqnum],
-      boolList: [list.req.get(0).reqbool],
+      bool: Fn.lookup(Fn.element(list.req, 0), "reqbool", false),
+      str: Fn.lookup(Fn.element(list.req, 0), "reqstr", "fallback"),
+      num: Fn.lookup(Fn.element(list.req, 0), "reqnum", 0),
+      strList: [Fn.lookup(Fn.element(list.req, 0), "reqstr", "fallback")],
+      numList: [Fn.lookup(Fn.element(list.req, 0), "reqnum", 0)],
+      boolList: [Fn.lookup(Fn.element(list.req, 0), "reqbool", false)],
     });
 
     // passing a reference to a complete list
@@ -108,6 +108,7 @@ export class ReferenceStack extends TerraformStack {
 
     // passing an element of a list ref of a complex list type (no block) into a resource
     new edge.OptionalAttributeResource(this, "list_item_from_list_type_ref", {
+      // FIXME: add this to other language tests
       str: list.computedListOfObject.get("5").str,
     });
   }

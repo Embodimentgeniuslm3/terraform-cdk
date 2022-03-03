@@ -140,17 +140,23 @@ describe("java full integration", () => {
       const item = stack.byId("from_list");
 
       // Direct access is not supported, we have to go through terraform functions
-      expect(item.bool).toEqual("${list_block_resource.list.req[0].reqbool}");
-      expect(item.str).toEqual("${list_block_resource.list.req[0].reqstr}");
-      expect(item.num).toEqual("${list_block_resource.list.req[0].reqnum}");
+      expect(item.bool).toEqual(
+        '${lookup(element(list_block_resource.list.req, 0), "reqbool", false)}'
+      );
+      expect(item.str).toEqual(
+        '${lookup(element(list_block_resource.list.req, 0), "reqstr", false)}'
+      );
+      expect(item.num).toEqual(
+        '${lookup(element(list_block_resource.list.req, 0), "reqnum", false)}'
+      );
       expect(item.boolList).toEqual([
-        "${list_block_resource.list.req[0].reqbool",
+        '${lookup(element(list_block_resource.list.req, 0), "reqbool", false)',
       ]);
       expect(item.strList).toEqual([
-        "${list_block_resource.list.req[0].reqstr",
+        '${lookup(element(list_block_resource.list.req, 0), "reqstr", false)',
       ]);
       expect(item.numList).toEqual([
-        "${list_block_resource.list.req[0].reqnum",
+        '${lookup(element(list_block_resource.list.req, 0), "reqnum", false)',
       ]);
     });
 
