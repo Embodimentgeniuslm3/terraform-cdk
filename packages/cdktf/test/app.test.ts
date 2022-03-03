@@ -551,13 +551,12 @@ describe("Cross Stack references", () => {
     const originOutput = Object.values(
       JSON.parse(originStackSynth).output as { value: string }[]
     )[0].value;
+    const originOutputName = Object.keys(
+      JSON.parse(originStackSynth).output as { value: string }[]
+    )[0];
     expect(originOutput).toContain(".complex_computed_list[42].id");
     expect(targetStackSynth).toHaveResourceWithProperties(TestResource, {
-      // FIXME: update this
-      name: expect.stringContaining("${lookup(element("),
-    });
-    expect(targetStackSynth).toHaveResourceWithProperties(TestResource, {
-      name: expect.stringContaining(', 42), "id", "")}'),
+      name: expect.stringContaining(originOutputName),
     });
   });
 
