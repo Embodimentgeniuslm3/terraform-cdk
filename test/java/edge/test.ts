@@ -144,19 +144,19 @@ describe("java full integration", () => {
         '${lookup(element(list_block_resource.list.req, 0), "reqbool", false)}'
       );
       expect(item.str).toEqual(
-        '${lookup(element(list_block_resource.list.req, 0), "reqstr", false)}'
+        '${lookup(element(list_block_resource.list.req, 0), "reqstr", "fallback")}'
       );
       expect(item.num).toEqual(
-        '${lookup(element(list_block_resource.list.req, 0), "reqnum", false)}'
+        '${lookup(element(list_block_resource.list.req, 0), "reqnum", 0)}'
       );
       expect(item.boolList).toEqual([
-        '${lookup(element(list_block_resource.list.req, 0), "reqbool", false)',
+        '${lookup(element(list_block_resource.list.req, 0), "reqbool", false)}',
       ]);
       expect(item.strList).toEqual([
-        '${lookup(element(list_block_resource.list.req, 0), "reqstr", false)',
+        '${lookup(element(list_block_resource.list.req, 0), "reqstr", "fallback")}',
       ]);
       expect(item.numList).toEqual([
-        '${lookup(element(list_block_resource.list.req, 0), "reqnum", false)',
+        '${lookup(element(list_block_resource.list.req, 0), "reqnum", 0)}',
       ]);
     });
 
