@@ -23,9 +23,7 @@ class MyStack extends TerraformStack {
 
     new Instance(this, "web", {
       availabilityZone: "cn-bj2-04",
-      imageId: Token.asString(
-        Fn.lookup(Fn.element(images.images, 0), "id", "")
-      ),
+      imageId: images.images.get(0).id,
       instanceType: "n-basic-2",
       rootPassword: "wA1234567",
       name: "cdktf-example-instance",

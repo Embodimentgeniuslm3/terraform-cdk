@@ -34,7 +34,7 @@ public class Main extends TerraformStack {
 
 	Instance.Builder.create(this, "web")
 	    .availabilityZone("cn-bj2-04")
-            .imageId(Token.asString(Fn.lookup(Fn.element(images.getImages(), 0), "id", "")))
+            .imageId(images.getImages().get(0).getId())
             .instanceType("n-basic-2")
             .rootPassword("wA1234567")
             .name("cdktf-example-instance")
