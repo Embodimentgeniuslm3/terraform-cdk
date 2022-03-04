@@ -69,7 +69,7 @@ export class CdktfStack {
   public stateMachine: InterpreterFrom<typeof stackExecutionMachine>;
   public stackName: string;
   public currentPlan?: TerraformPlan;
-  public stacks?: SynthesizedStack[];
+  public stack: SynthesizedStack;
   public outputs?: Record<string, any>;
   public outputsByConstructId?: NestedTerraformOutputs;
   public deployingResources?: DeployingResource[];
@@ -87,6 +87,7 @@ export class CdktfStack {
     autoApprove?: boolean;
     abortSignal: AbortSignal;
   }) {
+    this.stack = stack;
     this.stackName = stack.name;
     this.stateMachine = interpret(
       stackExecutionMachine.withContext({
