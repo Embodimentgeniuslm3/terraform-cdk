@@ -161,7 +161,7 @@ class KubernetesApplicationStack extends TerraformStack {
     new KubernetesProvider(this, "cluster", {
       host: cluster.endpoint,
       clusterCaCertificate: Fn.base64decode(
-        Fn.lookup(Fn.element(cluster.certificateAuthority, 0), "data", "")
+        cluster.certificateAuthority.get(0).data
       ),
       token: clusterAuth.token,
     });

@@ -1,5 +1,5 @@
 import { Construct } from "constructs";
-import { App, TerraformStack, TerraformOutput, Fn } from "cdktf";
+import { App, TerraformStack, TerraformOutput } from "cdktf";
 import {
   CloudRunService,
   GoogleProvider,
@@ -65,7 +65,7 @@ class MyStack extends TerraformStack {
     });
 
     new TerraformOutput(this, "cdktfcloudrunUrlN", {
-      value: Fn.lookup(Fn.element(cloudrunsvcapp.status, 0), "url", ""),
+      value: cloudrunsvcapp.status.get(0).url,
     });
   }
 }
